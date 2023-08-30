@@ -24,7 +24,7 @@ public class Pipe : GameObject
             return;
         }
         
-        Position.Y = _random.Next(1, 180);
+        Position.Y = _random.Next(1, 150);
         const int gap = 120 + 320;
         LinkedPipe.Position.Y = Position.Y + gap;
     }

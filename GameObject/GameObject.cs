@@ -17,6 +17,14 @@ public abstract class GameObject
         Height = h;
     }
 
+    public bool CollidesWith(GameObject other)
+    {
+        return Position.X + Width / 2 > other.Position.X - other.Width / 2 &&
+               Position.X - Width / 2 < other.Position.X + other.Width / 2 &&
+               Position.Y + Height / 2 > other.Position.Y - other.Height / 2 &&
+               Position.Y - Height / 2 < other.Position.Y + other.Height / 2;
+    }
+    
     public abstract void Update(GameTime deltaTime);
     public abstract void Draw();
 }

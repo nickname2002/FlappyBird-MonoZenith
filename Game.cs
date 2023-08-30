@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZenith.Components;
 using MonoZenith.GameObject;
 
 namespace MonoZenith;
@@ -11,11 +14,31 @@ public partial class Game
     private Texture2D _backdropTexture;
     private Texture2D _topPipeTexture;
     private Texture2D _bottomPipeTexture;
+    private Texture2D _startLogoTexture;
+    private Texture2D _gameOverLogoTexture;
     
     // Game objects
     private List<Backdrop> _backdrops;
     private List<(Pipe, Pipe)> _pipeCouples;
     private Bird _bird;
+    
+    // UI Components
+    Button _startButton;
+    Button _gameOverButton;
+    
+    // Game state
+    private SpriteFont _pixelFont;
+    private int _score = 0;
+    private GameStates _gameState;
+    private enum GameStates
+    {
+        Start,
+        Playing,
+        GameOver
+    }
+    
+    // Audio
+    private SoundEffectInstance _pointSound;
 
     private void InitializeBackdrops()
     {
@@ -30,7 +53,7 @@ public partial class Game
 
     private void InitializePipes()
     {
-        // Create three pairs of pipes, with a gap size of 100 pixels
+        _pipeCouples = new List<(Pipe, Pipe)>();
         const int pipeGap = 120;
         const int pipeAmount = 2;
         int distanceBetweenPipes = 220;
@@ -53,6 +76,7 @@ public partial class Game
         // Window properties
         SetScreenSize(288, 512);
         SetWindowTitle("Flappy Bird (MonoZenith)");
+        _pixelFont = LoadFont("pixel");
         
         // Backdrops
         _backdropTexture = LoadImage("Textures/background-day.png");
@@ -62,16 +86,90 @@ public partial class Game
         // Pipes
         _topPipeTexture = LoadImage("Textures/pipe-green-rotated.png");
         _bottomPipeTexture = LoadImage("Textures/pipe-green.png");
-        _pipeCouples = new List<(Pipe, Pipe)>();
         InitializePipes();
         
         // Bird
         _bird = new Bird(this, new Vector2(ScreenWidth / 2, 256), 34, 24);
+        
+        // Start screen
+        _startLogoTexture = LoadImage("Textures/message.png");
+        _gameState = GameStates.Start;
+        _startButton = new Button(
+            this,
+            new Vector2(45, 512 / 2 + 100),
+            200, 100,
+            "START", 3, Color.White,
+            Color.Black, 0, Color.Black);
+        _startButton.SetOnClickAction(StartGameEvent);
+        
+        // Game over screen
+        _gameOverLogoTexture = LoadImage("Textures/gameover.png");
+        _gameOverButton = new Button(
+            this,
+            new Vector2(45, 512 / 2 + 100),
+            200, 100,
+            "RESTART", 2, Color.White,
+            Color.DarkOrange, 3, Color.OrangeRed);
+        _gameOverButton.SetOnClickAction(GoToStartScreenEvent);
+        
+        // Load audio
+        _pointSound = LoadAudio("Content/Audio/point.wav");
     }
 
-    /* Update game logic. */
-    public void Update(GameTime deltaTime)
+    public void HandleCollision()
     {
+        if (_bird.IsDead)
+            return;
+        
+        foreach ((Pipe topPipe, Pipe bottomPipe) in _pipeCouples)
+        {
+            if (_bird.CollidesWith(topPipe) || _bird.CollidesWith(bottomPipe))
+            {
+                _bird.HitSound.Play();
+                _bird.IsDead = true;
+            }
+        }
+    }
+
+    public void UpdateScore()
+    {
+        // Add 1 to score when the bird passes a pipe
+        foreach ((Pipe topPipe, _) in _pipeCouples)
+        {
+            if (Math.Abs(_bird.Position.X - topPipe.Position.X) < 1)
+            {
+                _pointSound.Play();
+                _score++;
+            }
+        }
+    }
+    
+    public void StartGameEvent()
+    {
+        InitializePipes();
+        _bird = new Bird(this, new Vector2(ScreenWidth / 2, 256), 34, 24);
+        _gameState = GameStates.Playing;
+    }
+
+    public void GoToStartScreenEvent()
+    {
+        _gameState = GameStates.Start;
+        _score = 0;
+    }
+    
+    public void DisplayStartScreen()
+    {
+        DrawImage(_backdropTexture, new Vector2(288 / 2, 512 / 2), 1);
+        DrawImage(_startLogoTexture, new Vector2(288 / 2, 512 / 2), 1);
+    }
+
+    public void UpdateGame(GameTime deltaTime)
+    {
+        if (_bird.IsGameOver)
+        {
+            _gameState = GameStates.GameOver;
+        }
+        
         // Update backdrops
         foreach (Backdrop backdrop in _backdrops)
         {
@@ -86,10 +184,34 @@ public partial class Game
         }
         
         _bird.Update(deltaTime);
+        UpdateScore();
+        HandleCollision();
     }
     
-    /* Draw objects/backdrop. */
-    public void Draw()
+    /* Update game logic. */
+    public void Update(GameTime deltaTime)
+    {
+        switch (_gameState)
+        {
+            case GameStates.Start:
+                _startButton.Update(deltaTime);
+                break;
+            
+            case GameStates.Playing:
+                UpdateGame(deltaTime);
+                break;
+            
+            case GameStates.GameOver:
+                _gameOverButton.Update(deltaTime);
+                break;
+            
+            default:
+                _startButton.Update(deltaTime);
+                break;
+        }
+    }
+    
+    public void DisplayGame()
     {
         // Draw backdrops
         foreach (Backdrop backdrop in _backdrops)
@@ -105,5 +227,37 @@ public partial class Game
         }
         
         _bird.Draw();
+        DrawText($"{_score.ToString()}", new Vector2(ScreenWidth / 2, 50), _pixelFont, Color.White, 2);
+    }
+
+    public void DisplayGameOverScreen()
+    {
+        DrawImage(_backdropTexture, new Vector2(288 / 2, 512 / 2), 1);
+        DrawImage(_gameOverLogoTexture, new Vector2(288 / 2, 512 / 2 - 100), 1);
+        DrawText($"{_score.ToString()}", new Vector2(ScreenWidth / 2, 50), _pixelFont, Color.White, 2);
+        _gameOverButton.Draw();
+    }
+    
+    /* Draw objects/backdrop. */
+    public void Draw()
+    {
+        switch (_gameState)
+        {
+            case GameStates.Start:
+                DisplayStartScreen();
+                break;
+            
+            case GameStates.Playing:
+                DisplayGame();
+                break;
+            
+            case GameStates.GameOver:
+                DisplayGameOverScreen();
+                break;
+            
+            default:
+                DisplayStartScreen();
+                break;
+        }
     }
 }

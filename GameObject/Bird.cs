@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mail;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -23,7 +24,12 @@ public class Bird : GameObject
     private List<Texture2D> _textures;
     private BirdStates _state;
     private float _rotation;
-    private bool _isDead;
+    public bool IsDead;
+    public bool IsGameOver;
+    
+    // Audio
+    private readonly SoundEffectInstance _flapSound;
+    public readonly SoundEffectInstance HitSound;
     
     // Animation delay
     private readonly float _animationDelay;
@@ -40,7 +46,12 @@ public class Bird : GameObject
         };
         _state = BirdStates.UpFlap;
         _rotation = -25f;
-        _isDead = false;
+        IsDead = false;
+        IsGameOver = false;
+        
+        // Load sound effects
+        _flapSound = Game.LoadAudio("Content/Audio/wing.wav");
+        HitSound = Game.LoadAudio("Content/Audio/hit.wav");
         
         // Set animation delay
         _animationDelay = 100f;
@@ -70,13 +81,16 @@ public class Bird : GameObject
         // Check if bird is dead
         if (Position.Y > Game.ScreenHeight)
         {
-            _isDead = true;
+            HitSound.Play();
+            IsDead = true;
+            IsGameOver = true;
             return;
         }
 
         // Check if bird is jumping
-        if (Game.GetKeyDown(Keys.Space))
+        if (Game.GetKeyDown(Keys.Space) && !IsDead)
         {
+            _flapSound.Play();
             _rotation = -25f;
             _velocity.Y = -JumpSpeed;
         }
@@ -91,7 +105,7 @@ public class Bird : GameObject
     
     public override void Update(GameTime deltaTime)
     {
-        if (_isDead)
+        if (IsGameOver)
         {
             return;
         }

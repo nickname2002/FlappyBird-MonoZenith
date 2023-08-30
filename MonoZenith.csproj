@@ -14,6 +14,16 @@
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
     <None Remove=".mgstats" />
+    <None Include="bin\Debug\net6.0\Content\Audio\die.ogg" />
+    <None Include="bin\Debug\net6.0\Content\Audio\die.wav" />
+    <None Include="bin\Debug\net6.0\Content\Audio\hit.ogg" />
+    <None Include="bin\Debug\net6.0\Content\Audio\hit.wav" />
+    <None Include="bin\Debug\net6.0\Content\Audio\point.ogg" />
+    <None Include="bin\Debug\net6.0\Content\Audio\point.wav" />
+    <None Include="bin\Debug\net6.0\Content\Audio\swoosh.ogg" />
+    <None Include="bin\Debug\net6.0\Content\Audio\swoosh.wav" />
+    <None Include="bin\Debug\net6.0\Content\Audio\wing.ogg" />
+    <None Include="bin\Debug\net6.0\Content\Audio\wing.wav" />
     <None Include="bin\Debug\net6.0\Content\Fonts\pixel.ttf" />
     <None Include="bin\Debug\net6.0\Content\Fonts\pixel.xnb" />
     <None Include="bin\Debug\net6.0\Content\Textures\0.png" />
