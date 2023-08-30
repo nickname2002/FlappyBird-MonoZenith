@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "swhWLt80koLiKl9BWZNddlmhdivMN73d9BayVAb7cETpGalYTitvepEW2LBSRd7bRAS3DH0miGxVUEf5Ld1WLg==",
+  "success": true,
+  "projectFilePath": "/Users/nickjordan/Documents/GitHub/FlappyBird-MonoZenith/MonoZenith/MonoZenith/MonoZenith.csproj",
+  "expectedPackageFiles": [
+    "/Users/nickjordan/.nuget/packages/monogame.framework.desktopgl/3.8.1.303/monogame.framework.desktopgl.3.8.1.303.nupkg.sha512",
+    "/Users/nickjordan/.nuget/packages/microsoft.netcore.app.ref/6.0.21/microsoft.netcore.app.ref.6.0.21.nupkg.sha512",
+    "/Users/nickjordan/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.21/microsoft.aspnetcore.app.ref.6.0.21.nupkg.sha512",
+    "/Users/nickjordan/.nuget/packages/microsoft.netcore.app.host.osx-arm64/6.0.21/microsoft.netcore.app.host.osx-arm64.6.0.21.nupkg.sha512"
+  ],
+  "logs": []
+}

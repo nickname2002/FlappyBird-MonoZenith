@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Icon.ico" />
+    <None Remove="Icon.bmp" />
+    <None Remove=".mgstats" />
+    <None Include="bin\Debug\net6.0\Content\Fonts\pixel.ttf" />
+    <None Include="bin\Debug\net6.0\Content\Fonts\pixel.xnb" />
+    <None Include="bin\Debug\net6.0\Content\Textures\0.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\1.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\2.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\3.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\4.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\5.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\6.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\7.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\8.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\9.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\background-day.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\background-night.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\base.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\bluebird-downflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\bluebird-midflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\bluebird-upflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\gameover.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\message.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\pipe-green-rotated.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\pipe-green.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\pipe-red.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\redbird-downflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\redbird-midflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\redbird-upflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\yellowbird-downflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\yellowbird-midflap.png" />
+    <None Include="bin\Debug\net6.0\Content\Textures\yellowbird-upflap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icon.ico" />
+    <EmbeddedResource Include="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\net6.0" />
+    <Folder Include="Content\Audio\" />
+  </ItemGroup>
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Message Text="Restoring dotnet tools" Importance="High" />
+    <Exec Command="dotnet tool restore" />
+  </Target>
+</Project>
